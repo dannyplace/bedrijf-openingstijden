@@ -20,10 +20,10 @@ function openingstijden_settings_init() {
 
     add_settings_section('uitzonderingen_section', 'Uitzonderingsdagen', null, 'openingstijden');
 
-    add_settings_field('uitzonderingen', 'Uitzonderingen (YYYY-MM-DD: Tijd)', function() {
+    add_settings_field('uitzonderingen', 'Uitzonderingen (datum: omschrijving: status)', function() {
         $opties = get_option('openingstijden_data');
-        echo "<textarea name='openingstijden_data[uitzonderingen]' rows='5' cols='50'>" . esc_textarea($opties['uitzonderingen'] ?? '') . "</textarea>";
-        echo "<p>Bijv: 2025-12-25: Gesloten</p>";
+        echo "<textarea name='openingstijden_data[uitzonderingen]' rows='6' cols='70'>" . esc_textarea($opties['uitzonderingen'] ?? '') . "</textarea>";
+        echo "<p>Bijv: 2025-12-25: Eerste Kerstdag: Gesloten</p>";
     }, 'openingstijden', 'uitzonderingen_section');
 
     add_settings_section('stijl_section', 'Stijl Instellingen', null, 'openingstijden');

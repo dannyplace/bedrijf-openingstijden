@@ -1,8 +1,8 @@
 <?php
 /*
 Plugin Name: Bedrijf Openingstijden
-Description: Beheer en toon de openingstijden van je bedrijf met uitzonderingen en styling.
-Version: 1.0
+Description: Toon openingstijden en uitzonderingen met styling en een filterbare shortcode.
+Version: 1.2
 Author: Jouw Naam
 */
 
