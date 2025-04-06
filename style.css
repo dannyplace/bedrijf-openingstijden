@@ -1,0 +1,9 @@
+.openingstijden-tabel {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 500px;
+}
+.openingstijden-tabel td {
+    padding: 4px 8px;
+    vertical-align: top;
+}
