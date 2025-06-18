@@ -41,8 +41,8 @@ function openingstijden_shortcode() {
     foreach ($dagen as $dag) {
         $tijd = $opties[$dag] ?? 'Gesloten';
         $output .= '<tr>';
-        $output .= '<td style="border: ' . ($border ? '1px solid #ccc' : 'none') . '; padding-top: 4px; padding-bottom: 4px; border: ' . ($border ? '1px solid #ccc' : 'none') . ';"><strong>' . ucfirst($dag) . '</strong></td>';
-        $output .= '<td style="border: ' . ($border ? '1px solid #ccc' : 'none') . '; padding-top: 4px; padding-bottom: 4px; border: ' . ($border ? '1px solid #ccc' : 'none') . ';">' . esc_html($tijd) . '</td>';
+        $output .= '<td style="border: ' . ($border ? '1px solid #ccc' : 'none') . '; padding-top: 4px; padding-bottom: 4px;"><strong>' . ucfirst($dag) . '</strong></td>';
+        $output .= '<td style="border: ' . ($border ? '1px solid #ccc' : 'none') . '; padding-top: 4px; padding-bottom: 4px;">' . esc_html($tijd) . '</td>';
         $output .= '</tr>';
     }
 
@@ -55,8 +55,8 @@ function openingstijden_shortcode() {
                 $omschrijving = trim($delen[1]);
                 $status = trim(implode(':', array_slice($delen, 2)));
                 $output .= '<tr>';
-                $output .= '<td style="border: ' . ($border ? '1px solid #ccc' : 'none') . '; padding-top: 4px; padding-bottom: 4px; border: ' . ($border ? '1px solid #ccc' : 'none') . ';">' . esc_html($omschrijving) . '</td>';
-                $output .= '<td style="border: ' . ($border ? '1px solid #ccc' : 'none') . '; padding-top: 4px; padding-bottom: 4px; border: ' . ($border ? '1px solid #ccc' : 'none') . ';">' . esc_html($status) . '</td>';
+                $output .= '<td style="border: ' . ($border ? '1px solid #ccc' : 'none') . '; padding-top: 4px; padding-bottom: 4px;">' . esc_html($omschrijving) . '</td>';
+                $output .= '<td style="border: ' . ($border ? '1px solid #ccc' : 'none') . '; padding-top: 4px; padding-bottom: 4px;">' . esc_html($status) . '</td>';
                 $output .= '</tr>';
             }
         }
@@ -129,8 +129,8 @@ function openingstijden_volgende_uitzonderingen_shortcode() {
 
     foreach (array_slice($items, 0, 2) as $item) {
         $output .= '<tr>';
-        $output .= '<td style="border: ' . ($border ? '1px solid #ccc' : 'none') . '; padding-top: 4px; padding-bottom: 4px; border: ' . ($border ? '1px solid #ccc' : 'none') . ';">' . esc_html($item['omschrijving']) . '</td>';
-        $output .= '<td style="border: ' . ($border ? '1px solid #ccc' : 'none') . '; padding-top: 4px; padding-bottom: 4px; border: ' . ($border ? '1px solid #ccc' : 'none') . ';">' . esc_html($item['status']) . '</td>';
+        $output .= '<td style="border: ' . ($border ? '1px solid #ccc' : 'none') . '; padding-top: 4px; padding-bottom: 4px;">' . esc_html($item['omschrijving']) . '</td>';
+        $output .= '<td style="border: ' . ($border ? '1px solid #ccc' : 'none') . '; padding-top: 4px; padding-bottom: 4px;">' . esc_html($item['status']) . '</td>';
         $output .= '</tr>';
     }
 
@@ -196,8 +196,8 @@ function openingstijden_volgende_uitzonderingen_ajax_callback() {
 
     foreach (array_slice($items, 0, 2) as $item) {
         echo '<tr>';
-        echo '<td style="border: ' . ($border ? '1px solid #ccc' : 'none') . '; padding-top: 4px; padding-bottom: 4px; border: ' . ($border ? '1px solid #ccc' : 'none') . ';">' . esc_html($item['omschrijving']) . '</td>';
-        echo '<td style="border: ' . ($border ? '1px solid #ccc' : 'none') . '; padding-top: 4px; padding-bottom: 4px; border: ' . ($border ? '1px solid #ccc' : 'none') . ';">' . esc_html($item['status']) . '</td>';
+        echo '<td style="border: ' . ($border ? '1px solid #ccc' : 'none') . '; padding-top: 4px; padding-bottom: 4px;">' . esc_html($item['omschrijving']) . '</td>';
+        echo '<td style="border: ' . ($border ? '1px solid #ccc' : 'none') . '; padding-top: 4px; padding-bottom: 4px;">' . esc_html($item['status']) . '</td>';
         echo '</tr>';
     }
 
