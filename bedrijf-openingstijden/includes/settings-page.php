@@ -5,8 +5,41 @@ function openingstijden_settings_menu() {
 }
 add_action('admin_menu', 'openingstijden_settings_menu');
 
+function openingstijden_sanitize_options($input) {
+    $sanitized = array();
+
+    $dagen = array('maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag','zondag');
+    foreach ($dagen as $dag) {
+        $sanitized[$dag] = sanitize_text_field($input[$dag] ?? '');
+    }
+
+    $sanitized['uitzonderingen'] = sanitize_textarea_field($input['uitzonderingen'] ?? '');
+
+    $allowed_align = array('left', 'center', 'right');
+
+    // Stijl voor [openingstijden]
+    $sanitized['kleur'] = sanitize_hex_color($input['kleur'] ?? '#000000') ?: '#000000';
+    foreach (array('mobile', 'tablet', 'desktop') as $dev) {
+        $sanitized["fontsize_{$dev}"] = intval($input["fontsize_{$dev}"] ?? 16);
+        $sanitized["align_{$dev}"] = in_array($input["align_{$dev}"] ?? 'left', $allowed_align, true) ? $input["align_{$dev}"] : 'left';
+    }
+    $sanitized['border'] = ($input['border'] ?? 'ja') === 'ja' ? 'ja' : 'nee';
+
+    // Stijl voor [openingstijden_volgende_uitzonderingen]
+    $sanitized['kleur_volgende'] = sanitize_hex_color($input['kleur_volgende'] ?? '#000000') ?: '#000000';
+    foreach (array('mobile', 'tablet', 'desktop') as $dev) {
+        $sanitized["fontsize_volgende_{$dev}"] = intval($input["fontsize_volgende_{$dev}"] ?? 16);
+        $sanitized["align_volgende_{$dev}"] = in_array($input["align_volgende_{$dev}"] ?? 'left', $allowed_align, true) ? $input["align_volgende_{$dev}"] : 'left';
+    }
+    $sanitized['border_volgende'] = ($input['border_volgende'] ?? 'ja') === 'ja' ? 'ja' : 'nee';
+
+    return $sanitized;
+}
+
 function openingstijden_settings_init() {
-    register_setting('openingstijden', 'openingstijden_data');
+    register_setting('openingstijden', 'openingstijden_data', array(
+        'sanitize_callback' => 'openingstijden_sanitize_options',
+    ));
 
     add_settings_section('open_section', 'Openingstijden per dag', null, 'openingstijden');
     $dagen = array('maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag','zondag');

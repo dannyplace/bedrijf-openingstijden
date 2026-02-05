@@ -1,34 +1,48 @@
 <?php
+function openingstijden_safe_fontsize($value, $default = 16) {
+    $size = intval($value ?? $default);
+    return ($size > 0 && $size <= 100) ? $size : $default;
+}
+
+function openingstijden_safe_align($value, $default = 'left') {
+    $allowed = array('left', 'center', 'right');
+    return in_array($value, $allowed, true) ? $value : $default;
+}
+
+function openingstijden_safe_color($value, $default = '#000000') {
+    return preg_match('/^#[0-9a-fA-F]{3,6}$/', $value ?? '') ? $value : $default;
+}
+
 function openingstijden_shortcode() {
     $opties = get_option('openingstijden_data');
-    $kleur = $opties['kleur'] ?? '#000';
+    $kleur = openingstijden_safe_color($opties['kleur'] ?? '#000');
 
-    $fontsize_mob = $opties['fontsize_mobile'] ?? '14';
-    $fontsize_tab = $opties['fontsize_tablet'] ?? '15';
-    $fontsize_desktop = $opties['fontsize_desktop'] ?? '16';
+    $fontsize_mob = openingstijden_safe_fontsize($opties['fontsize_mobile'] ?? '14', 14);
+    $fontsize_tab = openingstijden_safe_fontsize($opties['fontsize_tablet'] ?? '15', 15);
+    $fontsize_desktop = openingstijden_safe_fontsize($opties['fontsize_desktop'] ?? '16', 16);
 
-    $align_mobile = $opties['align_mobile'] ?? 'left';
-    $align_tablet = $opties['align_tablet'] ?? 'left';
-    $align_desktop = $opties['align_desktop'] ?? 'left';
+    $align_mobile = openingstijden_safe_align($opties['align_mobile'] ?? 'left');
+    $align_tablet = openingstijden_safe_align($opties['align_tablet'] ?? 'left');
+    $align_desktop = openingstijden_safe_align($opties['align_desktop'] ?? 'left');
 
     $border = ($opties['border'] ?? 'ja') === 'ja';
 
     $output = '<style>
     @media (max-width: 767px) {
         .shortcode-openingstijden {
-            font-size: ' . $fontsize_mob . 'px;
+            font-size: ' . intval($fontsize_mob) . 'px;
             text-align: ' . $align_mobile . ';
         }
     }
     @media (min-width: 768px) and (max-width: 1024px) {
         .shortcode-openingstijden {
-            font-size: ' . $fontsize_tab . 'px;
+            font-size: ' . intval($fontsize_tab) . 'px;
             text-align: ' . $align_tablet . ';
         }
     }
     @media (min-width: 1025px) {
         .shortcode-openingstijden {
-            font-size: ' . $fontsize_desktop . 'px;
+            font-size: ' . intval($fontsize_desktop) . 'px;
             text-align: ' . $align_desktop . ';
         }
     }
@@ -70,34 +84,34 @@ add_shortcode('openingstijden', 'openingstijden_shortcode');
 
 function openingstijden_volgende_uitzonderingen_shortcode() {
     $opties = get_option('openingstijden_data');
-    $kleur = $opties['kleur_volgende'] ?? '#000';
+    $kleur = openingstijden_safe_color($opties['kleur_volgende'] ?? '#000');
 
-    $fontsize_mob = $opties['fontsize_volgende_mobile'] ?? '14';
-    $fontsize_tab = $opties['fontsize_volgende_tablet'] ?? '15';
-    $fontsize_desktop = $opties['fontsize_volgende_desktop'] ?? '16';
+    $fontsize_mob = openingstijden_safe_fontsize($opties['fontsize_volgende_mobile'] ?? '14', 14);
+    $fontsize_tab = openingstijden_safe_fontsize($opties['fontsize_volgende_tablet'] ?? '15', 15);
+    $fontsize_desktop = openingstijden_safe_fontsize($opties['fontsize_volgende_desktop'] ?? '16', 16);
 
-    $align_mobile = $opties['align_volgende_mobile'] ?? 'left';
-    $align_tablet = $opties['align_volgende_tablet'] ?? 'left';
-    $align_desktop = $opties['align_volgende_desktop'] ?? 'left';
+    $align_mobile = openingstijden_safe_align($opties['align_volgende_mobile'] ?? 'left');
+    $align_tablet = openingstijden_safe_align($opties['align_volgende_tablet'] ?? 'left');
+    $align_desktop = openingstijden_safe_align($opties['align_volgende_desktop'] ?? 'left');
 
     $border = ($opties['border_volgende'] ?? 'ja') === 'ja';
 
     $output = '<style>
     @media (max-width: 767px) {
         .shortcode-openingstijden-volgende {
-            font-size: ' . $fontsize_mob . 'px;
+            font-size: ' . intval($fontsize_mob) . 'px;
             text-align: ' . $align_mobile . ';
         }
     }
     @media (min-width: 768px) and (max-width: 1024px) {
         .shortcode-openingstijden-volgende {
-            font-size: ' . $fontsize_tab . 'px;
+            font-size: ' . intval($fontsize_tab) . 'px;
             text-align: ' . $align_tablet . ';
         }
     }
     @media (min-width: 1025px) {
         .shortcode-openingstijden-volgende {
-            font-size: ' . $fontsize_desktop . 'px;
+            font-size: ' . intval($fontsize_desktop) . 'px;
             text-align: ' . $align_desktop . ';
         }
     }
@@ -142,7 +156,10 @@ add_shortcode('openingstijden_volgende_uitzonderingen', 'openingstijden_volgende
 
 function openingstijden_volgende_uitzonderingen_ajax_shortcode() {
     wp_enqueue_script('openingstijden-ajax', plugins_url('../assets/ajax-loader.js', __FILE__), array(), null, true);
-    wp_localize_script('openingstijden-ajax', 'openingstijden_ajax_object', array('ajax_url' => admin_url('admin-ajax.php')));
+    wp_localize_script('openingstijden-ajax', 'openingstijden_ajax_object', array(
+        'ajax_url' => admin_url('admin-ajax.php'),
+        'nonce'    => wp_create_nonce('openingstijden_ajax_nonce'),
+    ));
     return '<style>
     .openingstijden-spinner {
         border: 4px solid #f3f3f3;
@@ -166,8 +183,10 @@ function openingstijden_volgende_uitzonderingen_ajax_shortcode() {
 add_shortcode('openingstijden_volgende_uitzonderingen_ajax', 'openingstijden_volgende_uitzonderingen_ajax_shortcode');
 
 function openingstijden_volgende_uitzonderingen_ajax_callback() {
+    check_ajax_referer('openingstijden_ajax_nonce', 'nonce');
+
     $opties = get_option('openingstijden_data');
-    $kleur = $opties['kleur_volgende'] ?? '#000';
+    $kleur = openingstijden_safe_color($opties['kleur_volgende'] ?? '#000');
     $border = ($opties['border_volgende'] ?? 'ja') === 'ja';
 
     $regels = explode(PHP_EOL, $opties['uitzonderingen'] ?? '');

@@ -17,13 +17,15 @@ add_action('plugins_loaded', 'bedrijf_openingstijden_load');
 function openingstijden_enqueue_frontend_styles() {
     $opties = get_option('openingstijden_data');
 
-    $kleur = $opties['kleur_volgende'] ?? '#000';
-    $fontsize_mob = $opties['fontsize_volgende_mobile'] ?? '14';
-    $fontsize_tab = $opties['fontsize_volgende_tablet'] ?? '15';
-    $fontsize_desktop = $opties['fontsize_volgende_desktop'] ?? '16';
-    $align_mobile = $opties['align_volgende_mobile'] ?? 'left';
-    $align_tablet = $opties['align_volgende_tablet'] ?? 'left';
-    $align_desktop = $opties['align_volgende_desktop'] ?? 'left';
+    $allowed_align = array('left', 'center', 'right');
+
+    $kleur = preg_match('/^#[0-9a-fA-F]{3,6}$/', $opties['kleur_volgende'] ?? '') ? $opties['kleur_volgende'] : '#000000';
+    $fontsize_mob = intval($opties['fontsize_volgende_mobile'] ?? 14);
+    $fontsize_tab = intval($opties['fontsize_volgende_tablet'] ?? 15);
+    $fontsize_desktop = intval($opties['fontsize_volgende_desktop'] ?? 16);
+    $align_mobile = in_array($opties['align_volgende_mobile'] ?? 'left', $allowed_align, true) ? $opties['align_volgende_mobile'] : 'left';
+    $align_tablet = in_array($opties['align_volgende_tablet'] ?? 'left', $allowed_align, true) ? $opties['align_volgende_tablet'] : 'left';
+    $align_desktop = in_array($opties['align_volgende_desktop'] ?? 'left', $allowed_align, true) ? $opties['align_volgende_desktop'] : 'left';
 
     $border = ($opties['border_volgende'] ?? 'ja') === 'ja' ? '1px solid #ccc' : 'none';
 
