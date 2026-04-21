@@ -2,10 +2,10 @@
 /*
 Plugin Name: Bedrijf Openingstijden
 Description: Beheer de openingstijden van jouw bedrijf.
-Version: 1.1
+Version: 1.2
 Author: Danny's Place
 Requires at least: 5.0
-Tested up to: 6.6
+Tested up to: 6.7
 Requires PHP: 7.4
 Text Domain: bedrijf-openingstijden
 Domain Path: /languages

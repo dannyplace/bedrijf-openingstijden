@@ -11,6 +11,11 @@ document.addEventListener("DOMContentLoaded", function () {
     fetch(openingstijden_ajax_object.ajax_url + "?" + params.toString())
         .then((res) => res.text())
         .then((data) => {
-            ajaxContainer.innerHTML = data;
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(data, 'text/html');
+            const newContent = doc.body.firstChild;
+            if (newContent) {
+                ajaxContainer.replaceWith(newContent);
+            }
         });
 });
