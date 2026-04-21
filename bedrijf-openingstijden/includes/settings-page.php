@@ -5,8 +5,32 @@ function openingstijden_settings_menu() {
 }
 add_action('admin_menu', 'openingstijden_settings_menu');
 
+function openingstijden_sanitize_options($input) {
+    $allowed_keys = array('maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag','zondag','uitzonderingen','kleur','fontsize_mobile','fontsize_tablet','fontsize_desktop','align_mobile','align_tablet','align_desktop','border','kleur_volgende','fontsize_volgende_mobile','fontsize_volgende_tablet','fontsize_volgende_desktop','align_volgende_mobile','align_volgende_tablet','align_volgende_desktop','border_volgende');
+
+    $sanitized = array();
+    foreach ($allowed_keys as $key) {
+        if (!isset($input[$key])) continue;
+
+        $value = $input[$key];
+
+        if (in_array($key, array('kleur', 'kleur_volgende'))) {
+            $sanitized[$key] = preg_match('/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/', $value) ? $value : '#000000';
+        } elseif (strpos($key, 'fontsize') !== false) {
+            $sanitized[$key] = max(8, min(72, intval($value)));
+        } elseif (strpos($key, 'align') !== false) {
+            $sanitized[$key] = in_array($value, array('left', 'center', 'right')) ? $value : 'left';
+        } elseif (in_array($key, array('border', 'border_volgende'))) {
+            $sanitized[$key] = in_array($value, array('ja', 'nee')) ? $value : 'ja';
+        } else {
+            $sanitized[$key] = sanitize_text_field($value);
+        }
+    }
+    return $sanitized;
+}
+
 function openingstijden_settings_init() {
-    register_setting('openingstijden', 'openingstijden_data');
+    register_setting('openingstijden', 'openingstijden_data', array('sanitize_callback' => 'openingstijden_sanitize_options'));
 
     add_settings_section('open_section', 'Openingstijden per dag', null, 'openingstijden');
     $dagen = array('maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag','zondag');
