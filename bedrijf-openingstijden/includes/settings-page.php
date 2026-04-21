@@ -1,4 +1,37 @@
 <?php
+function openingstijden_sanitize_settings($input) {
+    if (!is_array($input)) {
+        return array();
+    }
+
+    $output = array();
+    $valid_days = array('maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag', 'zondag');
+    $valid_aligns = array('left', 'center', 'right');
+
+    foreach ($input as $key => $value) {
+        if (in_array($key, $valid_days)) {
+            $output[$key] = sanitize_text_field($value);
+        } elseif ($key === 'uitzonderingen') {
+            $output[$key] = sanitize_textarea_field($value);
+        } elseif (strpos($key, 'kleur') === 0) {
+            if (preg_match('/^#[0-9A-Fa-f]{6}$/', $value)) {
+                $output[$key] = sanitize_hex_color($value);
+            } else {
+                $output[$key] = '#000000';
+            }
+        } elseif (strpos($key, 'fontsize') === 0) {
+            $num = intval($value);
+            $output[$key] = max(8, min(72, $num));
+        } elseif (strpos($key, 'align') === 0) {
+            $output[$key] = in_array($value, $valid_aligns) ? $value : 'left';
+        } elseif (in_array($key, array('border', 'border_volgende'))) {
+            $output[$key] = in_array($value, array('ja', 'nee')) ? $value : 'ja';
+        }
+    }
+
+    return $output;
+}
+
 function openingstijden_settings_menu() {
     add_options_page('Openingstijden', 'Openingstijden', 'manage_options', 'openingstijden', 'openingstijden_settings_page');
     add_action('admin_init', 'openingstijden_settings_init');
@@ -6,7 +39,9 @@ function openingstijden_settings_menu() {
 add_action('admin_menu', 'openingstijden_settings_menu');
 
 function openingstijden_settings_init() {
-    register_setting('openingstijden', 'openingstijden_data');
+    register_setting('openingstijden', 'openingstijden_data', array(
+        'sanitize_callback' => 'openingstijden_sanitize_settings'
+    ));
 
     add_settings_section('open_section', 'Openingstijden per dag', null, 'openingstijden');
     $dagen = array('maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag','zondag');

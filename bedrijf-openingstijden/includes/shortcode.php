@@ -142,7 +142,10 @@ add_shortcode('openingstijden_volgende_uitzonderingen', 'openingstijden_volgende
 
 function openingstijden_volgende_uitzonderingen_ajax_shortcode() {
     wp_enqueue_script('openingstijden-ajax', plugins_url('../assets/ajax-loader.js', __FILE__), array(), null, true);
-    wp_localize_script('openingstijden-ajax', 'openingstijden_ajax_object', array('ajax_url' => admin_url('admin-ajax.php')));
+    wp_localize_script('openingstijden-ajax', 'openingstijden_ajax_object', array(
+        'ajax_url' => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('openingstijden_nonce')
+    ));
     return '<style>
     .openingstijden-spinner {
         border: 4px solid #f3f3f3;
@@ -166,6 +169,8 @@ function openingstijden_volgende_uitzonderingen_ajax_shortcode() {
 add_shortcode('openingstijden_volgende_uitzonderingen_ajax', 'openingstijden_volgende_uitzonderingen_ajax_shortcode');
 
 function openingstijden_volgende_uitzonderingen_ajax_callback() {
+    check_ajax_referer('openingstijden_nonce', 'nonce');
+
     $opties = get_option('openingstijden_data');
     $kleur = $opties['kleur_volgende'] ?? '#000';
     $border = ($opties['border_volgende'] ?? 'ja') === 'ja';
