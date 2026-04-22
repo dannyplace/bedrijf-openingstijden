@@ -29,24 +29,25 @@ function openingstijden_shortcode() {
     $output = '<style>
     @media (max-width: 767px) {
         .shortcode-openingstijden {
-            font-size: ' . $fontsize_mob . 'px;
-            text-align: ' . $align_mobile . ';
+            font-size: ' . intval($fontsize_mob) . 'px;
+            text-align: ' . esc_attr($align_mobile) . ';
         }
     }
     @media (min-width: 768px) and (max-width: 1024px) {
         .shortcode-openingstijden {
-            font-size: ' . $fontsize_tab . 'px;
-            text-align: ' . $align_tablet . ';
+            font-size: ' . intval($fontsize_tab) . 'px;
+            text-align: ' . esc_attr($align_tablet) . ';
         }
     }
     @media (min-width: 1025px) {
         .shortcode-openingstijden {
-            font-size: ' . $fontsize_desktop . 'px;
-            text-align: ' . $align_desktop . ';
+            font-size: ' . intval($fontsize_desktop) . 'px;
+            text-align: ' . esc_attr($align_desktop) . ';
         }
     }
     </style>';
 
+    $border_style = $border ? '1px solid #ccc' : 'none';
     $output .= '<div class="openingstijden shortcode-openingstijden" style="color: ' . esc_attr($kleur) . ';">';
     $output .= '<table class="openingstijden-tabel" style="border-collapse: collapse; width: 100%; max-width: 600px;">';
 
@@ -54,8 +55,8 @@ function openingstijden_shortcode() {
     foreach ($dagen as $dag) {
         $tijd = $opties[$dag] ?? 'Gesloten';
         $output .= '<tr>';
-        $output .= '<td style="border: ' . ($border ? '1px solid #ccc' : 'none') . '; padding-top: 4px; padding-bottom: 4px;"><strong>' . ucfirst($dag) . '</strong></td>';
-        $output .= '<td style="border: ' . ($border ? '1px solid #ccc' : 'none') . '; padding-top: 4px; padding-bottom: 4px;">' . esc_html($tijd) . '</td>';
+        $output .= '<td style="border: ' . esc_attr($border_style) . '; padding-top: 4px; padding-bottom: 4px;"><strong>' . ucfirst($dag) . '</strong></td>';
+        $output .= '<td style="border: ' . esc_attr($border_style) . '; padding-top: 4px; padding-bottom: 4px;">' . esc_html($tijd) . '</td>';
         $output .= '</tr>';
     }
 
@@ -68,8 +69,8 @@ function openingstijden_shortcode() {
                 $omschrijving = trim($delen[1]);
                 $status = trim(implode(':', array_slice($delen, 2)));
                 $output .= '<tr>';
-                $output .= '<td style="border: ' . ($border ? '1px solid #ccc' : 'none') . '; padding-top: 4px; padding-bottom: 4px;">' . esc_html($omschrijving) . '</td>';
-                $output .= '<td style="border: ' . ($border ? '1px solid #ccc' : 'none') . '; padding-top: 4px; padding-bottom: 4px;">' . esc_html($status) . '</td>';
+                $output .= '<td style="border: ' . esc_attr($border_style) . '; padding-top: 4px; padding-bottom: 4px;">' . esc_html($omschrijving) . '</td>';
+                $output .= '<td style="border: ' . esc_attr($border_style) . '; padding-top: 4px; padding-bottom: 4px;">' . esc_html($status) . '</td>';
                 $output .= '</tr>';
             }
         }
@@ -94,24 +95,25 @@ function openingstijden_volgende_uitzonderingen_shortcode() {
     $align_desktop = openingstijden_validate_align($opties['align_volgende_desktop'] ?? 'left');
 
     $border = ($opties['border_volgende'] ?? 'ja') === 'ja';
+    $border_style_volgende = $border ? '1px solid #ccc' : 'none';
 
     $output = '<style>
     @media (max-width: 767px) {
         .shortcode-openingstijden-volgende {
-            font-size: ' . $fontsize_mob . 'px;
-            text-align: ' . $align_mobile . ';
+            font-size: ' . intval($fontsize_mob) . 'px;
+            text-align: ' . esc_attr($align_mobile) . ';
         }
     }
     @media (min-width: 768px) and (max-width: 1024px) {
         .shortcode-openingstijden-volgende {
-            font-size: ' . $fontsize_tab . 'px;
-            text-align: ' . $align_tablet . ';
+            font-size: ' . intval($fontsize_tab) . 'px;
+            text-align: ' . esc_attr($align_tablet) . ';
         }
     }
     @media (min-width: 1025px) {
         .shortcode-openingstijden-volgende {
-            font-size: ' . $fontsize_desktop . 'px;
-            text-align: ' . $align_desktop . ';
+            font-size: ' . intval($fontsize_desktop) . 'px;
+            text-align: ' . esc_attr($align_desktop) . ';
         }
     }
     </style>';
@@ -142,8 +144,8 @@ function openingstijden_volgende_uitzonderingen_shortcode() {
 
     foreach (array_slice($items, 0, 2) as $item) {
         $output .= '<tr>';
-        $output .= '<td style="border: ' . ($border ? '1px solid #ccc' : 'none') . '; padding-top: 4px; padding-bottom: 4px;">' . esc_html($item['omschrijving']) . '</td>';
-        $output .= '<td style="border: ' . ($border ? '1px solid #ccc' : 'none') . '; padding-top: 4px; padding-bottom: 4px;">' . esc_html($item['status']) . '</td>';
+        $output .= '<td style="border: ' . esc_attr($border_style_volgende) . '; padding-top: 4px; padding-bottom: 4px;">' . esc_html($item['omschrijving']) . '</td>';
+        $output .= '<td style="border: ' . esc_attr($border_style_volgende) . '; padding-top: 4px; padding-bottom: 4px;">' . esc_html($item['status']) . '</td>';
         $output .= '</tr>';
     }
 
@@ -187,6 +189,7 @@ function openingstijden_volgende_uitzonderingen_ajax_callback() {
     $opties = get_option('openingstijden_data');
     $kleur = openingstijden_validate_color($opties['kleur_volgende'] ?? '#000000');
     $border = ($opties['border_volgende'] ?? 'ja') === 'ja';
+    $border_style_ajax = $border ? '1px solid #ccc' : 'none';
 
     $regels = explode(PHP_EOL, $opties['uitzonderingen'] ?? '');
     $items = array();
@@ -214,8 +217,8 @@ function openingstijden_volgende_uitzonderingen_ajax_callback() {
 
     foreach (array_slice($items, 0, 2) as $item) {
         echo '<tr>';
-        echo '<td style="border: ' . ($border ? '1px solid #ccc' : 'none') . '; padding-top: 4px; padding-bottom: 4px;">' . esc_html($item['omschrijving']) . '</td>';
-        echo '<td style="border: ' . ($border ? '1px solid #ccc' : 'none') . '; padding-top: 4px; padding-bottom: 4px;">' . esc_html($item['status']) . '</td>';
+        echo '<td style="border: ' . esc_attr($border_style_ajax) . '; padding-top: 4px; padding-bottom: 4px;">' . esc_html($item['omschrijving']) . '</td>';
+        echo '<td style="border: ' . esc_attr($border_style_ajax) . '; padding-top: 4px; padding-bottom: 4px;">' . esc_html($item['status']) . '</td>';
         echo '</tr>';
     }
 

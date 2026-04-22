@@ -47,29 +47,29 @@ function openingstijden_enqueue_frontend_styles() {
 
     $custom_css = "
         .shortcode-openingstijden-volgende {
-            color: " . $kleur . ";
+            color: " . sanitize_hex_color($kleur) . ";
         }
         .shortcode-openingstijden-volgende td {
             padding-top: 4px;
             padding-bottom: 4px;
-            border: " . $border . ";
+            border: " . esc_attr($border) . ";
         }
         @media (max-width: 767px) {
             .shortcode-openingstijden-volgende {
-                font-size: " . $fontsize_mob . "px;
-                text-align: " . $align_mobile . ";
+                font-size: " . intval($fontsize_mob) . "px;
+                text-align: " . esc_attr($align_mobile) . ";
             }
         }
         @media (min-width: 768px) and (max-width: 1024px) {
             .shortcode-openingstijden-volgende {
-                font-size: " . $fontsize_tab . "px;
-                text-align: " . $align_tablet . ";
+                font-size: " . intval($fontsize_tab) . "px;
+                text-align: " . esc_attr($align_tablet) . ";
             }
         }
         @media (min-width: 1025px) {
             .shortcode-openingstijden-volgende {
-                font-size: " . $fontsize_desktop . "px;
-                text-align: " . $align_desktop . ";
+                font-size: " . intval($fontsize_desktop) . "px;
+                text-align: " . esc_attr($align_desktop) . ";
             }
         }
     ";
